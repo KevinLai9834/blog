@@ -34,8 +34,7 @@
     var userStatus = "";
     $.ajax({
         url: '../loginstatus.php',
-        type: "GET",
-        contentType: 'application/json; charset=utf-8',
+        type: "POST",
         success: function (data) {
             console.log("登陸狀態"+data);
             if (data !== "UserStateless") {
