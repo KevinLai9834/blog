@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="../css/index.css">
     <title>Blog</title>
 </head>
+
 <body>
     <div class="data">
         <nav>
@@ -29,12 +30,14 @@
     <div class="blogBlock">
     </div>
 </body>
-<script>
+<script type="text/javascript">
     var userStatus = "";
     $.ajax({
         url: '../loginstatus.php',
-        type: "POST",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            console.log("登陸狀態"+data);
             if (data !== "UserStateless") {
                 $(".logintext").text(data);
                 $(".logouttext").text("登出");
@@ -42,33 +45,35 @@
             } else {
                 $(".logintext").text("登入");
                 $(".logouttext").remove();
-                $(".logintext").css({"cursor":"pointer"});
+                $(".logintext").css({ "cursor": "pointer" });
                 userStatus = "UserStateless";
             }
-            $.ajax({
-                url: '../article.php',
-                type: "POST",
-                dataType: 'json',
-                success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        $('.blogBlock').append(
-                            "<div class='blog' style='cursor: pointer;' onclick=viewArticle(" + data[i].id + ")>" +
-                            "<H2 id='pubtitle'>" + data[i].title + "</H2>" +
-                            "<div class='blogText'>" +
-                            "<p>發布日期:" +
-                            "<p id=pubDate>" + data[i].create_time + "&nbsp;&nbsp;&nbsp;" +
-                            "<p id='pubAccount'>" + data[i].m_account + "&nbsp;&nbsp;&nbsp;" +
-                            "<p id=msgAmount>留言數(" + msgCount(data[i].id) + ")</p>" +
-                            "</p>" +
-                            "</div>" +
-                            "</div>");
-                    }
 
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+    $.ajax({
+        url: '../article.php',
+        type: "GET",
+        dataType: 'json',
+        success: function (data) {
+            console.log("文章""+data)
+            for (var i = 0; i < data.length; i++) {
+                $('.blogBlock').append(
+                    "<div class='blog' style='cursor: pointer;' onclick=viewArticle(" + data[i].id + ")>" +
+                    "<H2 id='pubtitle'>" + data[i].title + "</H2>" +
+                    "<div class='blogText'>" +
+                    "<p>發布日期:" +
+                    "<p id=pubDate>" + data[i].create_time + "&nbsp;&nbsp;&nbsp;" +
+                    "<p id='pubAccount'>" + data[i].m_account + "&nbsp;&nbsp;&nbsp;" +
+                    "<p id=msgAmount>留言數(" + msgCount(data[i].id) + ")</p>" +
+                    "</p>" +
+                    "</div>" +
+                    "</div>");
+            }
+
         },
         error: function (error) {
             console.log(error);

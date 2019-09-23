@@ -1,6 +1,6 @@
 <?php
     include_once("connection.php");
-    if( $_SERVER['REQUEST_METHOD'] == "POST") {
+    if( $_SERVER['REQUEST_METHOD'] == "GET") {
         $query = "SELECT * FROM  article";
         $result = mysqli_query($conn, $query);
         while ($row = mysqli_fetch_assoc($result)) {
