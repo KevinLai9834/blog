@@ -1,1 +1,11 @@
-'{}' 
+{
+    "name": "kevin/index-php",
+    "description": "123",
+    "authors": [
+        {
+            "name": "KevinLai",
+            "email": "zx2515296964@gmail.com"
+        }
+    ],
+    "require": {}
+}
