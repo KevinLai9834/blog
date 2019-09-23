@@ -1,0 +1,153 @@
+html,
+    body {
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+
+    }
+
+    h1 {
+        font-size: 50px;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5{
+        padding: 0 0 0 50px;
+        font-family: Microsoft JhengHei;
+    }
+    .logintext{
+        font-family: Microsoft JhengHei;
+    }
+    .publish,.logouttext,.logo{
+        font-family: Microsoft JhengHei;
+        cursor: pointer;
+    }
+    HR {
+        width: 100%;
+        border: 0;
+        margin: auto;
+        height: 1px;
+        background: #333;
+        background-image: linear-gradient(to right, #ccc, #333, #ccc);
+    }
+
+    .data {
+        width: 100%;
+        height: 125px;
+    }
+
+    .viewBlog,
+    .respondBlock,
+    .leaveMsg,
+    .leaveMsgbody,
+    .textareas {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+    }
+
+    .viewContent,
+    .respondContent,
+    .leaveMsgbody {
+        width: 1000px;
+        height: 100%;
+        padding: 20px;
+        box-shadow: 0 0 5px #dadadae1;
+        text-align: left;
+        margin: 10px 0;
+    }
+
+    .respondContent {
+        box-shadow: 0 0 5px #dadadae1;
+    }
+
+    .createTime {
+        color: rgba(128, 128, 128, 0.89);
+        width: 100%;
+        text-align: right;
+        font-size: 14px;
+        font-family: Microsoft JhengHei;
+    }
+
+    .content {
+        padding: 20px 0 0 50px;
+        font-size: 24px;
+        font-family: Microsoft JhengHei;
+    }
+
+    .respondText h2,
+    .msgBlock {
+        padding: 0;
+        text-align: center;
+        
+    }
+
+    .textareas {
+        padding: 30px;
+    }
+
+    .textareas button {
+        margin: 50px 0;
+    }
+
+    .textarea {
+        width: 70%;
+        height: 250px;
+        padding: 4px;
+        border: 1px solid #888;
+        text-align: left;
+        resize: vertical;
+        overflow: auto;
+        font-size: 16px;
+    }
+
+    div.selectBox {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 700px;
+        height: 500px;
+        border: 1px solid #888;
+        background-color: white;
+        margin: -250px 0 0 -350px;
+        z-index: 1002;
+
+    }
+
+    div.shelter {
+        display: none;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.6;
+        z-index: 1001
+    }
+
+    button {
+        background-color: #00A0E9;
+        border-radius: 3px;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 20px 0 40px 0;
+        font-family: Microsoft JhengHei;
+    }
+
+    button:hover {
+        background-color: rgb(58, 178, 233);
+    }

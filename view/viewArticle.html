@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/navstyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/viewArticle.css">
+    <title>Blog</title>
+</head>
+<body>
+    <div class="data">
+        <nav>
+            <div class="menu-icon">
+                <i class="fa fa-bars fa-2x"></i>
+            </div>
+            <div class="logo"  onclick="index()">主頁</div>
+            <ul>
+                <li class="publish" onclick="publish()">發表文章</li>
+                <li class="logintext" onclick="login()"></li>
+                <li class="logouttext" onclick="logout()">登出</li>
+            </ul>
+        </nav>
+    </div>
+    <div class="viewBlog">
+    </div>
+    <div class="respondText">
+        <H2>回應</H2>
+    </div>
+    <div class="respondBlock">
+    </div>
+
+
+    <div class="msgBlock">
+        <button id="btnSelect" value="button" onclick="showSelectBox()">我要留言</button>
+        <div id="selectBox" class="selectBox">
+            <!-- <div id="txtContent" class="textarea"  contenteditable="false" placeholder="留言內容"></div> -->
+            <div class="textareas">
+                <textarea id="txtContent" class="textarea" placeholder="留言內容"></textarea>
+                <button onclick="publishMsg()">發布</button>
+            </div>
+        </div>
+        <div id="shelter" class="shelter" onclick="dismiss()"></div>
+    </div>
+</body>
+<script>
+    const strUrl = location.href;
+    let getPara, ParaVal;
+    var aryPara = [];
+    if (strUrl.indexOf("?") != -1) {
+        var getSearch = strUrl.split("?");
+        getPara = getSearch[1].split("&");
+        for (i = 0; i < getPara.length; i++) {
+            ParaVal = getPara[i].split("=");
+            aryPara.push(ParaVal[0]);
+            aryPara[ParaVal[0]] = ParaVal[1];
+        }
+
+    }
+    const articleID = aryPara[0]
+    var userStatus = "";
+    $.ajax({
+        url: '../loginstatus.php',
+        type: "POST",
+        success: function (data) {
+            if (data !== "UserStateless") {
+                $(".logintext").text(data);
+                $(".logintext").style="cursor: pointer;"
+                userStatus = data;
+            } else {
+                $(".logintext").text("登入");
+                $(".logouttext").remove();
+                userStatus = "UserStateless";
+            }
+            $.ajax({
+                url: '../respond.php',
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    a_id: articleID
+                },
+                success: function (data) {
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        const content = data[i].content.replace(/\n|\r\n/g,"<br>");
+                        $('.respondBlock').append(
+                            "<div class='respondContent'>" +
+                            "<H2 class='account'>" + data[i].m_account + "</H2>" +
+                            "<p class='createTime'>" + data[i].respond_time + "</p>" + "<HR>" +
+                            "<p class='content'>" + content + "</p><br>" +
+                            "</div>"
+                        );
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+    $.ajax({
+        url: '../article.php',
+        type: "POST",
+        dataType: "JSON",
+        success: function (data) { 
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].id === articleID) {
+                    const content = data[i].content.replace(/\n|\r\n/g,"<br>");
+                    $('.viewBlog').append(
+                        "<div class='viewContent'>" +
+                        "<H1 class='title'>" + data[i].title + "</H1>" +
+                        "<H2 class='account'>" + data[i].m_account + "</H2>" +
+                        "<p class='createTime'>" + data[i].create_time + "</p>" + "<HR>" +
+                        "<p class='content'>" + content +"</p>"+
+                        "</div>"
+                    );
+                }
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+    
+    function publishMsg() {
+        const txtContent = document.getElementById("txtContent").value;
+        const Msg=confirm("您確定要發布嗎");
+        if (Msg===true){
+            $.ajax({
+                url: '../respondmsg.php',
+                type: "POST",
+                data: {
+                    a_id: articleID,
+                    resContent: txtContent
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    }
+
+    function publish() {
+        if (userStatus !== "UserStateless") {
+            document.location.href = "publish.html";
+        } else {
+            alert("請先登入");
+        }
+    }
+    
+    function index(){
+        document.location.href = "index.html";
+    }
+   
+    function login() {
+        if (userStatus === "UserStateless") {
+            document.location.href = "login.html";
+        }
+    }
+    
+    function logout() {
+        const out=confirm("您確定是否要登出?");
+        if (out===true){
+            $.ajax({
+                url: '../logoutstatus.php',
+                type: "POST",
+                success: function (data) {
+                    
+                    if (out===true){
+                        document.location.href = "index.html";
+                    }
+                },
+                error: function (error) {
+                }
+            });
+        }
+    }
+    
+    function showSelectBox() {
+        if (userStatus !== "UserStateless") {
+            document.getElementById("selectBox").style.display = "block";
+            document.getElementById("shelter").style.display = "block";
+        } else {
+            alert("請先登入");
+        }
+        
+    }
+    
+    function dismiss() {
+        document.getElementById("selectBox").style.display = "none";
+        document.getElementById("shelter").style.display = "none";
+    }
+</script>
+
+</html>

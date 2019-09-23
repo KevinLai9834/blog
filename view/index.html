@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/navstyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+    <title>Blog</title>
+</head>
+<body>
+    <div class="data">
+        <nav>
+            <div class="menu-icon">
+                <i class="fa fa-bars fa-2x"></i>
+            </div>
+            <div class="logo" onclick="index()">主頁</div>
+            <ul>
+                <li class="publish" onclick="publish()">發表文章</li>
+                <li class="logintext" onclick=login();></li>
+                <li class="logouttext" onclick="logout()"></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="blogBlock">
+    </div>
+</body>
+<script>
+    var userStatus = "";
+    $.ajax({
+        url: '../loginstatus.php',
+        type: "POST",
+        success: function (data) {
+            if (data !== "UserStateless") {
+                $(".logintext").text(data);
+                $(".logouttext").text("登出");
+                userStatus = data;
+            } else {
+                $(".logintext").text("登入");
+                $(".logouttext").remove();
+                $(".logintext").css({"cursor":"pointer"});
+                userStatus = "UserStateless";
+            }
+            $.ajax({
+                url: '../article.php',
+                type: "POST",
+                dataType: 'json',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('.blogBlock').append(
+                            "<div class='blog' style='cursor: pointer;' onclick=viewArticle(" + data[i].id + ")>" +
+                            "<H2 id='pubtitle'>" + data[i].title + "</H2>" +
+                            "<div class='blogText'>" +
+                            "<p>發布日期:" +
+                            "<p id=pubDate>" + data[i].create_time + "&nbsp;&nbsp;&nbsp;" +
+                            "<p id='pubAccount'>" + data[i].m_account + "&nbsp;&nbsp;&nbsp;" +
+                            "<p id=msgAmount>留言數(" + msgCount(data[i].id) + ")</p>" +
+                            "</p>" +
+                            "</div>" +
+                            "</div>");
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+    function msgCount(id) {
+        let Count = 0;
+        $.ajax({
+            url: '../respond.php',
+            type: "POST",
+            dataType: "JSON",
+            async: false,
+            data: {
+                a_id: id
+            },
+            success: function (data) {
+                Count = data.length;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        return Count;
+    }
+
+    function publish() {
+        if (userStatus !== "UserStateless") {
+            document.location.href = "publish.html";
+        } else {
+            alert("請先登入");
+        }
+    }
+
+    function login() {
+        if (userStatus === "UserStateless") {
+            document.location.href = "login.html";
+        }
+    }
+
+    function logout() {
+        const out = confirm("您確定是否要登出?");
+        if (out === true) {
+            $.ajax({
+                url: '../logoutstatus.php',
+                type: "POST",
+                success: function (data) {
+                    if (out === true) {
+                        location.reload();
+                    }
+                },
+                error: function (error) {
+                }
+            });
+        }
+    }
+
+    function viewArticle(id) {
+        document.location.href = "viewArticle.html?" + id;
+    }
+</script>
+
+</html>

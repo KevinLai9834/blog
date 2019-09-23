@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/login.css">
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="backbox">
+            <div class="loginMsg">
+                <p class="title">尚未註冊</p>
+                <p>Sign up to save all your collection.</p>
+                <button id="switch1" ">註冊</button>
+            </div>
+            <div class=" signupMsg visibility">
+                    <p class="title">會員登入</p>
+                    <p>Log in to see all your collection.</p>
+                    <button id="switch2">登入</button>
+            </div>
+        </div>
+        <div class="frontbox">
+            <div class="login">
+                <h2>登入</h2>
+                <form class="Login" action="login.php" method="post"></form>
+                <input id="txtAccount" type="text" name="txtAccount" placeholder="請輸入您的帳號">
+                <input id="txtPassword" type="password" name="txtPassword" placeholder=" 請輸入您的密碼">
+                </form>
+                <p>忘記密碼?</p>
+                <button type="submit" onclick="Login()">登入</button>
+            </div>
+            <div class="signup hide">
+                <h2>註冊</h2>
+                <form class="Registe" action="registe.php" method="post"></form>
+                <input id=regAccount type="text" name="regAccount" pattern="[a-zA-Z0-9]{6,}" onblur=accountError(value)
+                    placeholder=" 請輸入您的帳號">
+                <input id="regPassword" type="password" name="regPassword" pattern="[a-zA-Z0-9]{8,}"
+                    onblur=pwError(value) placeholder=" 請輸入您的密碼">
+                <input id="regPassword2" type="password" name="regPassword2" pattern="[a-zA-Z0-9]{8,}"
+                    placeholder=" 再次輸入您的密碼">
+                </form>
+                <button type="submit" onclick="Registe()">註冊</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $loginMsg = $('.loginMsg'),
+        $login = $('.login'),
+        $signupMsg = $('.signupMsg'),
+        $signup = $('.signup'),
+        $frontbox = $('.frontbox');
+    const account = document.getElementById("regAccount");
+    const password = document.getElementById("regPassword");
+    const password2 = document.getElementById("regPassword2");
+    $('#switch1').on('click', function () {
+        $loginMsg.toggleClass("visibility");
+        $frontbox.addClass("moving");
+        $signupMsg.toggleClass("visibility");
+        $signup.toggleClass('hide');
+        $login.toggleClass('hide');
+    });
+    $('#switch2').on('click', function () {
+        $loginMsg.toggleClass("visibility");
+        $frontbox.removeClass("moving");
+        $signupMsg.toggleClass("visibility");
+        $signup.toggleClass('hide');
+        $login.toggleClass('hide');
+    });
+    function accountError(accountError) {
+        if (accountError.length < 6) {
+            alert("帳號請輸入長度為6至20之間的字串")
+        }
+    }
+    function pwError(pwError) {
+        if (pwError.length < 8) {
+            alert("密碼請輸入長度為8至20之間的字串")
+        }
+    }
+    function Login() {
+        $.ajax({
+            url: '../login.php',
+            dataType: 'json',
+            type: "POST",
+            data: { //傳送資料
+                txtAccount: $("#txtAccount").val(),
+                txtPassword: $("#txtPassword").val()
+            },
+            success: function (data) {
+                if (data[0].account) {
+                    if (data[0].password === $("#txtPassword").val()) {
+                        location.href = 'index.html'
+                    } else {
+                        alert("帳號或密碼有誤");
+                    }
+                }
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
+
+    function Registe() {
+        var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+        if (account.value!=="" && password.value!=="") {
+            if (pattern.test(account.value)) {
+                alert('請勿輸入特殊符號')
+            } else {
+                if (password.value === password2.value) {
+                    $.ajax({
+                        url: '../registe.php',
+                        type: "POST",
+                        data: { //傳送資料
+                            regAccount: $("#regAccount").val(),
+                            regPassword: $("#regPassword").val(),
+                        },
+                        success: function (data) {
+
+                            location.href = 'index.html'
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                } else {
+                    alert('密碼不一致');
+                }
+            }
+        }else{
+            alert('請輸入帳號或密碼');
+        }
+
+
+    } 
+</script>
+
+</html>

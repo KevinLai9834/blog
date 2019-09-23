@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/navstyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/publish.css">
+    <title>發表文章</title>
+</head>
+
+<body>
+    <div class="data">
+        <nav>
+            <div class="menu-icon">
+                <i class="fa fa-bars fa-2x"></i>
+            </div>
+            <div class="logo" onclick="index()">主頁</div>
+            <ul>
+                <!-- <li class="publish" onclick="publish()">發表文章</li> -->
+                <li class="logintext" onclick=login();></li>
+                <li class="logouttext" onclick="logout()"></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="publisgBlock">
+        <div class="punText">
+            <H3>標題:</H3><br>
+            <input id="txtTitle" type="text" name="txtTitle"><br>
+            <H3>內文:</H3><br>
+            <textarea id="txtContent" class="textarea" placeholder="文章內容"></textarea>
+        </div>
+        <div class="pubBtn">
+            <button onclick="publish()">發表</button>
+        </div>
+
+    </div>
+
+</body>
+<script>
+    var userStatus = "";
+    $.ajax({
+        url: '../loginstatus.php',
+        type: "POST",
+        success: function (data) {
+            if (data !== "UserStateless") {
+                $(".logintext").text(data);
+                $(".logouttext").text("登出");
+                $(".logintext").style = "cursor: pointer;"
+                userStatus = data;
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+
+    function publish() {
+        const pub=confirm("您確定發表此文章嗎");
+        if (pub===true){
+            const txtContent = document.getElementById("txtContent").value;
+            $.ajax({
+                url: 'publisharticle.php',
+                type: "POST",
+                data: {
+                    pubTitle: $("#txtTitle").val(),
+                    pubContent: txtContent
+                },
+                success: function (data) {
+                    // document.location.href = "index2.html";
+                    document.location.href = "index.html";
+                },
+                error: function (error) {
+                }
+            });
+        }
+        
+    }
+
+    function index() {
+        document.location.href = "index.html";
+    }
+
+    function logout() {
+        const out = confirm("您確定是否要登出?");
+        if (out === true) {
+            $.ajax({
+                url: 'logoutstatus.php',
+                type: "POST",
+                success: function (data) {
+                    if (out === true) {
+                        document.location.href = "index.html";
+                    }
+                },
+                error: function (error) {
+                }
+            });
+        }
+    }
+</script>
+
+</html>
