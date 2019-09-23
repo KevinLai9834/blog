@@ -59,7 +59,7 @@
         type: "GET",
         dataType: 'json',
         success: function (data) {
-            console.log("文章""+data)
+            console.log("文章"+data)
             for (var i = 0; i < data.length; i++) {
                 $('.blogBlock').append(
                     "<div class='blog' style='cursor: pointer;' onclick=viewArticle(" + data[i].id + ")>" +
