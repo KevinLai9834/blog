@@ -31,16 +31,15 @@
                 <input id="txtAccount" type="text" name="txtAccount" placeholder="請輸入您的帳號">
                 <input id="txtPassword" type="password" name="txtPassword" placeholder=" 請輸入您的密碼">
                 </form>
-                <p>忘記密碼?</p>
                 <button type="submit" onclick="Login()">登入</button>
             </div>
             <div class="signup hide">
                 <h2>註冊</h2>
                 <form class="Registe" action="registe.php" method="post"></form>
-                <input id=regAccount type="text" name="regAccount" pattern="[a-zA-Z0-9]{6,}" onblur=accountError(value)
+                <input id=regAccount type="text" name="regAccount" pattern="[a-zA-Z0-9]{6,}" 
                     placeholder=" 請輸入您的帳號">
                 <input id="regPassword" type="password" name="regPassword" pattern="[a-zA-Z0-9]{8,}"
-                    onblur=pwError(value) placeholder=" 請輸入您的密碼">
+                    placeholder=" 請輸入您的密碼">
                 <input id="regPassword2" type="password" name="regPassword2" pattern="[a-zA-Z0-9]{8,}"
                     placeholder=" 再次輸入您的密碼">
                 </form>
@@ -72,16 +71,6 @@
         $signup.toggleClass('hide');
         $login.toggleClass('hide');
     });
-    function accountError(accountError) {
-        if (accountError.length < 6) {
-            alert("帳號請輸入長度為6至20之間的字串")
-        }
-    }
-    function pwError(pwError) {
-        if (pwError.length < 8) {
-            alert("密碼請輸入長度為8至20之間的字串")
-        }
-    }
     function Login() {
         $.ajax({
             url: '../login.php',
@@ -108,31 +97,42 @@
 
     function Registe() {
         var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
-        if (account.value!=="" && password.value!=="") {
-            if (pattern.test(account.value)) {
-                alert('請勿輸入特殊符號')
-            } else {
-                if (password.value === password2.value) {
-                    $.ajax({
-                        url: '../registe.php',
-                        type: "POST",
-                        data: { //傳送資料
-                            regAccount: $("#regAccount").val(),
-                            regPassword: $("#regPassword").val(),
-                        },
-                        success: function (data) {
+        if (account.value !== "" && password.value !== "") {
+            if (account.value.length >= 6) {
+                if (password.value.length >= 8) {
+                    if (pattern.test(account.value)) {
+                        alert('請勿輸入特殊符號')
+                    } else {
+                        if (password.value === password2.value) {
+                            $.ajax({
+                                url: '../registe.php',
+                                type: "POST",
+                                data: { //傳送資料
+                                    regAccount: $("#regAccount").val(),
+                                    regPassword: $("#regPassword").val(),
+                                },
+                                success: function (data) {
 
-                            location.href = 'index.html'
-                        },
-                        error: function (error) {
-                            console.log(error);
+                                    location.href = 'index.html'
+                                },
+                                error: function (error) {
+                                    console.log(error);
+                                }
+                            });
+                        } else {
+                            alert('密碼不一致');
                         }
-                    });
+                    }
                 } else {
-                    alert('密碼不一致');
+                    alert("密碼請輸入長度為8至20之間的字串")
                 }
+
+            } else {
+                alert("帳號請輸入長度為6至20之間的字串");
             }
-        }else{
+
+
+        } else {
             alert('請輸入帳號或密碼');
         }
 

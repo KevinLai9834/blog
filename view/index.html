@@ -58,8 +58,8 @@
         type: "POST",
         dataType: 'json',
         success: function (data) {
-            console.log("文章"+data)
-            for (var i = 0; i < data.length; i++) {
+            console.log("文章"+data.length)
+            for (var i = data.length-1; i >= 0; i--) {
                 $('.blogBlock').append(
                     "<div class='blog' style='cursor: pointer;' onclick=viewArticle(" + data[i].id + ")>" +
                     "<H2 id='pubtitle'>" + data[i].title + "</H2>" +

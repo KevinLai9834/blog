@@ -28,7 +28,7 @@
     <div class="publisgBlock">
         <div class="punText">
             <H3>標題:</H3><br>
-            <input id="txtTitle" type="text" name="txtTitle"><br>
+            <input id="txtTitle" type="text" name="txtTitle" placeholder="標題(限20字內)"><br>
             <H3>內文:</H3><br>
             <textarea id="txtContent" class="textarea" placeholder="文章內容"></textarea>
         </div>
@@ -58,25 +58,33 @@
     });
 
     function publish() {
-        const pub=confirm("您確定發表此文章嗎");
-        if (pub===true){
-            const txtContent = document.getElementById("txtContent").value;
-            $.ajax({
-                url: 'publisharticle.php',
-                type: "POST",
-                data: {
-                    pubTitle: $("#txtTitle").val(),
-                    pubContent: txtContent
-                },
-                success: function (data) {
-                    // document.location.href = "index2.html";
-                    document.location.href = "index.html";
-                },
-                error: function (error) {
-                }
-            });
+        const Title = document.getElementById("txtTitle");
+        if (Title.value.length <= 20) {
+            const pub = confirm("您確定發表此文章嗎");
+            if (pub === true) {
+                const txtContent = document.getElementById("txtContent").value;
+                $.ajax({
+                    url: '../publisharticle.php',
+                    type: "POST",
+                    data: {
+                        pubTitle: $("#txtTitle").val(),
+                        pubContent: txtContent
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        // document.location.href = "index2.html";
+                        document.location.href = "index.html";
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                });
+            }
+        }else{
+            alert("標題限20字內");
         }
-        
+
+
     }
 
     function index() {

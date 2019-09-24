@@ -1,6 +1,6 @@
 <?php
     include_once("connection.php");
-    if( $_SERVER['REQUEST_METHOD'] == "GET") {
+    if( $_SERVER['REQUEST_METHOD'] == "POST") {
         $account = $_POST['regAccount'];
         $password = $_POST['regPassword'];
         $query = "INSERT INTO  member (account , password ) VALUES('$account','$password')";
